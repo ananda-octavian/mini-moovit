@@ -1,0 +1,16 @@
+{
+  "mode": "TransJakarta",
+  "travelTimePerStop": 4,
+  "lines": [
+    {
+      "id": "1",
+      "name": "Koridor 1",
+      "color": "Biru",
+      "stops": [
+        { "name": "Blok M", "coords": [-6.2447,106.8003] },
+        { "name": "Bundaran HI", "coords": [-6.1931,106.8218] },
+        { "name": "Kota", "coords": [-6.1376,106.8145] }
+      ]
+    }
+  ]
+}

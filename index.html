@@ -4,85 +4,44 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mini Moovit</title>
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="assets/css/style.css">
-
-  <!-- Manifest PWA -->
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#2d89ef">
-
-  <!-- Leaflet CSS -->
-  <link 
-    rel="stylesheet" 
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-o9N1j7kXl3A1F4+/qk6Xw7QF5M3lSZvC5I1El2d5g5s="
-    crossorigin=""
-  />
-
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    select, button { padding: 8px; margin: 5px 0; }
+    .card { margin-bottom: 15px; }
+  </style>
 </head>
 <body>
 
-  <header class="header">
-    Mini Moovit
-  </header>
+<h2>Mini Moovit</h2>
 
-  <main class="container">
+<div class="card">
+  <label>Dari:</label>
+  <select id="from"></select>
+</div>
 
-    <!-- Gunakan Lokasi -->
-    <div class="card">
-      <button class="btn" onclick="detectLocation()">📍 Gunakan Lokasi Saya</button>
-    </div>
-    <div id="nearestInfo" class="info-text"></div>
+<div class="card">
+  <label>Tujuan:</label>
+  <select id="to"></select>
+</div>
 
-    <!-- Dropdown Dari -->
-    <div class="card">
-      <label for="from">Dari</label>
-      <select id="from"></select>
-    </div>
+<div class="card">
+  <button id="searchBtn">Cari Rute</button>
+</div>
 
-    <!-- Dropdown Tujuan -->
-    <div class="card">
-      <label for="to">Tujuan</label>
-      <select id="to"></select>
-    </div>
+<div class="card">
+  <h3>Hasil:</h3>
+  <div id="result"></div>
+</div>
 
-    <!-- Tombol Cari Rute -->
-    <div class="card">
-      <button class="btn" onclick="searchRoute()">Cari Rute</button>
-    </div>
+<script type="module" src="./ui/app.js"></script>
 
-    <!-- Map -->
-    <div class="map-container">
-      <div id="map" class="map"></div>
-    </div>
-
-    <!-- Hasil Rute -->
-    <div class="card">
-      <div id="result" style="display:none;"></div>
-    </div>
-
-  </main>
-
-  <!-- JS Library & App -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-o9N1j7kXl3A1F4+/qk6Xw7QF5M3lSZvC5I1El2d5g5s="
-    crossorigin="">
-  </script>
-
-  <script src="assets/js/bfs.js"></script>
-  <script src="assets/js/app.js"></script>
-
-  <!-- Service Worker PWA -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () {
-        navigator.serviceWorker.register('./service-worker.js')
-          .then(() => console.log('Service Worker Registered'))
-          .catch(err => console.log('SW Error:', err));
-      });
-    }
-  </script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./service-worker.js');
+}
+</script>
 
 </body>
 </html>

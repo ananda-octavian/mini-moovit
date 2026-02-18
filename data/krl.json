@@ -1,0 +1,16 @@
+{
+  "mode": "KRL",
+  "travelTimePerStop": 3,
+  "lines": [
+    {
+      "id": "Red",
+      "name": "Red Line (Bekasi Line)",
+      "color": "Merah",
+      "stations": [
+        { "name": "Bekasi", "coords": [-6.2383,106.9991] },
+        { "name": "Manggarai", "coords": [-6.2105,106.8506] },
+        { "name": "Jakarta Kota", "coords": [-6.1376,106.8145] }
+      ]
+    }
+  ]
+}

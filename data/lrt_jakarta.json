@@ -1,0 +1,10 @@
+{
+  "mode": "LRT Jakarta",
+  "travelTimePerStop": 2,
+  "lines": {
+    "LRT Hijau Tua": [
+      { "name": "Velodrome", "coords": [-6.2119,106.8806] },
+      { "name": "Pegangsaan Dua", "coords": [-6.1498,106.9094] }
+    ]
+  }
+}

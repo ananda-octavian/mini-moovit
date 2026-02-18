@@ -1,11 +1,10 @@
 {
   "name": "Mini Moovit",
-  "short_name": "Moovit",
-  "start_url": "./index.html",
+  "short_name": "MiniMoovit",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2d89ef",
-  "orientation": "portrait",
   "icons": [
     {
       "src": "assets/icons/icon-192.png",

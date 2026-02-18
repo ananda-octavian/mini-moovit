@@ -1,0 +1,10 @@
+{
+  "mode": "LRT Jabodebek",
+  "travelTimePerStop": 3,
+  "lines": {
+    "LRT Hijau Muda": [
+      { "name": "Summarecon Bekasi", "coords": [-6.2452,107.0035] },
+      { "name": "Cawang", "coords": [-6.2434,106.8702] }
+    ]
+  }
+}
