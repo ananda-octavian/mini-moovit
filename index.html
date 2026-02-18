@@ -7,6 +7,12 @@
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#2d89ef">
+  <!-- Leaflet CSS -->
+<link 
+  rel="stylesheet" 
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
 </head>
 <body>
 
@@ -30,6 +36,11 @@
       <button onclick="searchRoute()">Cari Rute</button>
     </div>
 
+    <div class="card">
+      <div id="map" style="height:300px;"></div>
+    </div>
+
+
     <div class="card" id="result" style="display:none;"></div>
 
   </div>
@@ -47,6 +58,8 @@ if ("serviceWorker" in navigator) {
   });
 }
 </script>
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 
 </body>
