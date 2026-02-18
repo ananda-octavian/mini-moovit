@@ -1,6 +1,8 @@
 let map;
 let routeLine;
 let markers = [];
+let userMarker;
+
 
 document.addEventListener("DOMContentLoaded", function () {
   const fromSelect = document.getElementById("from");
@@ -103,4 +105,80 @@ function searchRoute() {
 
   // Zoom otomatis
   map.fitBounds(routeLine.getBounds());
+  
 }
+
+function detectLocation() {
+  if (!navigator.geolocation) {
+    alert("Browser tidak mendukung GPS");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    position => {
+      const userLat = position.coords.latitude;
+      const userLng = position.coords.longitude;
+
+      const userCoords = [userLat, userLng];
+
+      // Hapus marker lama
+      if (userMarker) {
+        map.removeLayer(userMarker);
+      }
+
+      // Tambah marker user
+      userMarker = L.marker(userCoords)
+        .addTo(map)
+        .bindPopup("📍 Lokasi Anda")
+        .openPopup();
+
+      map.setView(userCoords, 14);
+
+      // Cari stasiun terdekat
+      let nearestStation = null;
+      let shortestDistance = Infinity;
+
+      for (let station in stationCoords) {
+        const stationLat = stationCoords[station][0];
+        const stationLng = stationCoords[station][1];
+
+        const distance = calculateDistance(
+          userLat,
+          userLng,
+          stationLat,
+          stationLng
+        );
+
+        if (distance < shortestDistance) {
+          shortestDistance = distance;
+          nearestStation = station;
+        }
+      }
+
+      // Set dropdown otomatis
+      document.getElementById("from").value = nearestStation;
+
+      alert("Stasiun terdekat: " + nearestStation);
+    },
+    error => {
+      alert("Gagal mendapatkan lokasi");
+    }
+  );
+}
+
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) *
+    Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) *
+    Math.sin(dLon / 2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
