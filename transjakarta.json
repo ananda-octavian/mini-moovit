@@ -3,9 +3,55 @@
 
     "TJ Koridor 1 (Blok M - Kota)": [
       { "name": "Blok M", "coords": [-6.2447, 106.8003] },
+      { "name": "ASEAN", "coords": [-6.2380, 106.8000] },
+      { "name": "Senayan", "coords": [-6.2269, 106.8027] },
       { "name": "Bundaran HI", "coords": [-6.1944, 106.8229] },
       { "name": "Harmoni", "coords": [-6.1666, 106.8271] },
       { "name": "Kota", "coords": [-6.1370, 106.8145] }
+    ],
+
+    "TJ Koridor 2 (Pulogadung - Harmoni)": [
+      { "name": "Pulogadung", "coords": [-6.1890, 106.8970] },
+      { "name": "Cempaka Putih", "coords": [-6.1810, 106.8695] },
+      { "name": "Senen", "coords": [-6.1760, 106.8430] },
+      { "name": "Harmoni", "coords": [-6.1666, 106.8271] }
+    ],
+
+    "TJ Koridor 3 (Kalideres - Pasar Baru)": [
+      { "name": "Kalideres", "coords": [-6.1520, 106.7280] },
+      { "name": "Grogol", "coords": [-6.1640, 106.7910] },
+      { "name": "Pasar Baru", "coords": [-6.1820, 106.8470] }
+    ],
+
+    "TJ Koridor 4 (Pulo Gadung - Dukuh Atas 2)": [
+      { "name": "Pulo Gadung", "coords": [-6.1890, 106.8970] },
+      { "name": "Matraman", "coords": [-6.2010, 106.8550] },
+      { "name": "Dukuh Atas 2", "coords": [-6.2000, 106.8225] }
+    ],
+
+    "TJ Koridor 5 (Ancol - Kampung Melayu)": [
+      { "name": "Ancol", "coords": [-6.1230, 106.8340] },
+      { "name": "Kota", "coords": [-6.1370, 106.8145] },
+      { "name": "Kampung Melayu", "coords": [-6.1960, 106.8630] }
+    ],
+
+    "TJ Koridor 6 (Ragunan - Dukuh Atas 2)": [
+      { "name": "Ragunan", "coords": [-6.3160, 106.8300] },
+      { "name": "Cilandak", "coords": [-6.2850, 106.8020] },
+      { "name": "Dukuh Atas 2", "coords": [-6.2000, 106.8225] }
+    ],
+
+    "TJ Koridor 7 (Kampung Rambutan - Kampung Melayu)": [
+      { "name": "Kampung Rambutan", "coords": [-6.2610, 106.8790] },
+      { "name": "Matraman", "coords": [-6.2010, 106.8550] },
+      { "name": "Kampung Melayu", "coords": [-6.1960, 106.8630] }
+    ],
+
+    "TJ Koridor 8 (Lebak Bulus - Harmoni)": [
+      { "name": "Lebak Bulus", "coords": [-6.2611, 106.7891] },
+      { "name": "Fatmawati", "coords": [-6.2520, 106.8000] },
+      { "name": "Blok M", "coords": [-6.2447, 106.8003] },
+      { "name": "Harmoni", "coords": [-6.1666, 106.8271] }
     ],
 
     "TJ Koridor 9 (Pinang Ranti - Pluit)": [
@@ -15,11 +61,52 @@
       { "name": "Pluit", "coords": [-6.1230, 106.7890] }
     ],
 
-    "TJ Bekasi (Summarecon - Cawang)": [
+    "TJ Koridor 10 (Tanjung Priok - PGC Cililitan)": [
+      { "name": "Tanjung Priok", "coords": [-6.1160, 106.8880] },
+      { "name": "Ancol", "coords": [-6.1230, 106.8340] },
+      { "name": "PGC Cililitan", "coords": [-6.2390, 106.8760] }
+    ],
+
+    "TJ Koridor 11 (Kp. Melayu - Pulo Gebang)": [
+      { "name": "Kampung Melayu", "coords": [-6.1960, 106.8630] },
+      { "name": "Pulo Gadung", "coords": [-6.1890, 106.8970] },
+      { "name": "Pulo Gebang", "coords": [-6.1570, 106.9330] }
+    ],
+
+    "TJ Koridor 12 (Pluit - Tanjung Priok)": [
+      { "name": "Pluit", "coords": [-6.1230, 106.7890] },
+      { "name": "Penjaringan", "coords": [-6.1200, 106.8020] },
+      { "name": "Tanjung Priok", "coords": [-6.1160, 106.8880] }
+    ],
+
+    "TJ Koridor 13 (Ciledug - Tendean)": [
+      { "name": "Ciledug", "coords": [-6.2440, 106.7360] },
+      { "name": "Puri Beta", "coords": [-6.2410, 106.7470] },
+      { "name": "Tendean", "coords": [-6.2340, 106.8210] }
+    ],
+
+    "TJ Rute Luar Jakarta - Bekasi": [
       { "name": "Summarecon Bekasi", "coords": [-6.2275, 107.0020] },
       { "name": "Bekasi Barat", "coords": [-6.2410, 106.9900] },
       { "name": "Cawang", "coords": [-6.2450, 106.8660] }
-    ]
+    ],
 
+    "TJ Rute Luar Jakarta - BSD": [
+      { "name": "BSD Intermoda", "coords": [-6.3020, 106.6540] },
+      { "name": "Alam Sutera", "coords": [-6.2390, 106.6580] },
+      { "name": "Jelambar", "coords": [-6.1650, 106.7800] }
+    ],
+
+    "TJ Rute Luar Jakarta - Depok": [
+      { "name": "UI", "coords": [-6.3650, 106.8270] },
+      { "name": "Depok Baru", "coords": [-6.3950, 106.8410] },
+      { "name": "Lebak Bulus", "coords": [-6.2611, 106.7891] }
+    ],
+
+    "TJ Rute Luar Jakarta - Tangerang": [
+      { "name": "Poris", "coords": [-6.1760, 106.6490] },
+      { "name": "Cikokol", "coords": [-6.1800, 106.6200] },
+      { "name": "Kalideres", "coords": [-6.1520, 106.7280] }
+    ]
   }
 }
