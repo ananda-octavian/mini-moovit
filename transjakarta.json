@@ -1,0 +1,25 @@
+{
+  "lines": {
+
+    "TJ Koridor 1 (Blok M - Kota)": [
+      { "name": "Blok M", "coords": [-6.2447, 106.8003] },
+      { "name": "Bundaran HI", "coords": [-6.1944, 106.8229] },
+      { "name": "Harmoni", "coords": [-6.1666, 106.8271] },
+      { "name": "Kota", "coords": [-6.1370, 106.8145] }
+    ],
+
+    "TJ Koridor 9 (Pinang Ranti - Pluit)": [
+      { "name": "Pinang Ranti", "coords": [-6.2921, 106.8760] },
+      { "name": "Cawang UKI", "coords": [-6.2450, 106.8660] },
+      { "name": "Grogol", "coords": [-6.1640, 106.7910] },
+      { "name": "Pluit", "coords": [-6.1230, 106.7890] }
+    ],
+
+    "TJ Bekasi (Summarecon - Cawang)": [
+      { "name": "Summarecon Bekasi", "coords": [-6.2275, 107.0020] },
+      { "name": "Bekasi Barat", "coords": [-6.2410, 106.9900] },
+      { "name": "Cawang", "coords": [-6.2450, 106.8660] }
+    ]
+
+  }
+}

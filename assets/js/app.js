@@ -2,12 +2,24 @@ let map;
 let routeLine;
 let markers = [];
 let userMarker;
+let lines = {};
+const graph = {};
+const stationsData = {};
 
 
-document.addEventListener("DOMContentLoaded", function () {
+
+document.addEventListener("DOMContentLoaded", async function () {
   const fromSelect = document.getElementById("from");
   const toSelect = document.getElementById("to");
   map = L.map("map").setView([-6.2000, 106.8166], 12);
+  const response = await fetch("transjakarta.json");
+  const data = await response.json();
+
+  lines = data.lines;
+
+  buildGraph();
+  populateDropdown();
+
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution: "&copy; OpenStreetMap contributors"
@@ -79,7 +91,7 @@ function searchRoute() {
   let latlngs = [];
 
   path.forEach((station, index) => {
-    const coord = stationCoords[station];
+    const coord = stationsData[station].coords;
     latlngs.push(coord);
 
     let marker;
@@ -136,8 +148,8 @@ function searchRoute() {
       let shortestDistance = Infinity;
 
       for (let station in stationCoords) {
-        const stationLat = stationCoords[station][0];
-        const stationLng = stationCoords[station][1];
+        const stationLat = stationsData[station].coords[0];
+        const stationLng = stationsData[station].coords[1];
 
         const distance = calculateDistance(
           userLat,
@@ -173,6 +185,52 @@ function searchRoute() {
       alert("Gagal mendapatkan lokasi");
     }
   );
+}
+
+function buildGraph() {
+
+  for (let lineName in lines) {
+
+    const stations = lines[lineName];
+
+    stations.forEach((station, index) => {
+
+      stationsData[station.name] = {
+        mode: "TransJakarta",
+        line: lineName,
+        coords: station.coords
+      };
+
+      if (!graph[station.name]) {
+        graph[station.name] = [];
+      }
+
+      if (index > 0) {
+        const prev = stations[index - 1].name;
+        graph[station.name].push(prev);
+        graph[prev].push(station.name);
+      }
+
+    });
+  }
+}
+function populateDropdown() {
+  const fromSelect = document.getElementById("from");
+  const toSelect = document.getElementById("to");
+
+  Object.keys(stationsData).forEach(station => {
+
+    let option1 = document.createElement("option");
+    option1.value = station;
+    option1.textContent = station;
+
+    let option2 = document.createElement("option");
+    option2.value = station;
+    option2.textContent = station;
+
+    fromSelect.appendChild(option1);
+    toSelect.appendChild(option2);
+  });
 }
 
 function calculateDistance(lat1, lon1, lat2, lon2) {
