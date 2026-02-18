@@ -34,69 +34,61 @@ document.addEventListener("DOMContentLoaded", async function () {
 // =====================
 // SEARCH ROUTE
 // =====================
+function getModeColor(mode) {
+  switch(mode) {
+    case "TransJakarta": return "#0074D9"; // biru
+    case "KRL": return "#FF4136";         // merah
+    case "MRT": return "#FFDC00";         // kuning
+    case "LRT Jabodebek": return "#2ECC40"; // hijau muda
+    case "LRT Jakarta": return "#006400";   // hijau tua
+    default: return "#0074D9";
+  }
+}
+
 function searchRoute() {
   const from = document.getElementById("from").value;
   const to = document.getElementById("to").value;
   const resultDiv = document.getElementById("result");
 
-  if (!from || !to) {
-    alert("Pilih asal dan tujuan dulu");
-    return;
-  }
-
-  if (from === to) {
-    resultDiv.style.display = "block";
-    resultDiv.innerHTML = "Kamu sudah berada di tujuan.";
-    return;
-  }
+  if (!from || !to) { alert("Pilih asal dan tujuan dulu"); return; }
+  if (from === to) { resultDiv.style.display="block"; resultDiv.innerHTML="Kamu sudah berada di tujuan."; return; }
 
   const path = bfs(graph, from, to);
+  if (!path) { resultDiv.style.display="block"; resultDiv.innerHTML="Rute tidak ditemukan."; return; }
 
-  if (!path) {
-    resultDiv.style.display = "block";
-    resultDiv.innerHTML = "Rute tidak ditemukan.";
-    return;
-  }
-
-  // Tampilkan teks rute
   resultDiv.style.display = "block";
-  resultDiv.innerHTML =
-    "<strong>Rute:</strong><br>" +
-    path.join(" → ") +
-    "<br><br>Total " +
-    (path.length - 1) +
-    " pemberhentian";
+  resultDiv.innerHTML = "<strong>Rute:</strong><br>" + path.join(" → ") + "<br><br>Total " + (path.length-1) + " pemberhentian";
 
-  // Hapus marker lama
-  markers.forEach(marker => map.removeLayer(marker));
+  markers.forEach(m => map.removeLayer(m));
   markers = [];
-
-  // Hapus garis lama
-  if (routeLine) {
-    map.removeLayer(routeLine);
-  }
+  if (routeLine) map.removeLayer(routeLine);
 
   let latlngs = [];
-
-  path.forEach((station, index) => {
-    const coord = stationsData[station].coords;
+  path.forEach((station, idx) => {
+    const data = stationsData[station];
+    const coord = data.coords;
     latlngs.push(coord);
 
-    let marker;
-    if (index === 0) {
-      marker = L.marker(coord).addTo(map).bindPopup("🚩 " + station);
-    } else if (index === path.length - 1) {
-      marker = L.marker(coord).addTo(map).bindPopup("🏁 " + station);
-    } else {
-      marker = L.marker(coord).addTo(map).bindPopup(station);
-    }
+    const color = getModeColor(data.mode);
+
+    // Marker
+    const marker = L.circleMarker(coord, {
+      radius: 7,
+      color: color,
+      fillColor: color,
+      fillOpacity: 1
+    }).addTo(map).bindPopup(station + " (" + data.mode + ")");
 
     markers.push(marker);
   });
 
-  routeLine = L.polyline(latlngs, { color: "blue" }).addTo(map);
+  // Polyline
+  const mode = stationsData[path[0]].mode;
+  routeLine = L.polyline(latlngs, { color: getModeColor(mode), weight:5 }).addTo(map);
   map.fitBounds(routeLine.getBounds());
 }
+
+
 
 // =====================
 // DETECT LOCATION
