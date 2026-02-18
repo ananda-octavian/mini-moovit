@@ -108,7 +108,7 @@ function searchRoute() {
   
 }
 
-function detectLocation() {
+  function detectLocation() {
   if (!navigator.geolocation) {
     alert("Browser tidak mendukung GPS");
     return;
@@ -121,12 +121,10 @@ function detectLocation() {
 
       const userCoords = [userLat, userLng];
 
-      // Hapus marker lama
       if (userMarker) {
         map.removeLayer(userMarker);
       }
 
-      // Tambah marker user
       userMarker = L.marker(userCoords)
         .addTo(map)
         .bindPopup("📍 Lokasi Anda")
@@ -134,7 +132,6 @@ function detectLocation() {
 
       map.setView(userCoords, 14);
 
-      // Cari stasiun terdekat
       let nearestStation = null;
       let shortestDistance = Infinity;
 
@@ -158,7 +155,19 @@ function detectLocation() {
       // Set dropdown otomatis
       document.getElementById("from").value = nearestStation;
 
-      alert("Stasiun terdekat: " + nearestStation);
+      // Tampilkan info jarak
+      document.getElementById("nearestInfo").innerText =
+        "🎯 Stasiun terdekat: " +
+        nearestStation +
+        " (" +
+        shortestDistance.toFixed(2) +
+        " km)";
+
+      // Jika tujuan sudah dipilih → auto cari rute
+      const destination = document.getElementById("to").value;
+      if (destination) {
+        searchRoute(); // ← ini yang benar
+      }
     },
     error => {
       alert("Gagal mendapatkan lokasi");
