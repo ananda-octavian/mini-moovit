@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini Moovit</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#2d89ef">
+</head>
+<body>
+
+  <div class="header">
+    Mini Moovit
+  </div>
+
+  <div class="container">
+
+    <div class="card">
+      <label>Dari</label>
+      <select id="from"></select>
+    </div>
+
+    <div class="card">
+      <label>Tujuan</label>
+      <select id="to"></select>
+    </div>
+
+    <div class="card">
+      <button onclick="searchRoute()">Cari Rute</button>
+    </div>
+
+    <div class="card" id="result" style="display:none;"></div>
+
+  </div>
+
+  <!-- JS URUTAN WAJIB -->
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/bfs.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./service-worker.js")
+      .then(() => console.log("Service Worker Registered"))
+      .catch(err => console.log("SW Error:", err));
+  });
+}
+</script>
+
+
+</body>
+</html>

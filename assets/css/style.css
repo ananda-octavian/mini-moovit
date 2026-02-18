@@ -1,0 +1,42 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f2f4f8;
+}
+
+.header {
+  background: #2d89ef;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  font-weight: bold;
+}
+
+.container {
+  padding: 15px;
+}
+
+.card {
+  background: white;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+}
+
+select, button {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+}
+
+button {
+  background: #2d89ef;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
