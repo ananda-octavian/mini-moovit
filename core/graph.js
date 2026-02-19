@@ -8,10 +8,13 @@ function addEdge(a, b, mode, lineName) {
 
 export function buildGraph(modas, integrations) {
 
-  graph = {};
-  stationCoords = {};
+  // 🔥 jangan reassign
+  Object.keys(graph).forEach(key => delete graph[key]);
+  Object.keys(stationCoords).forEach(key => delete stationCoords[key]);
 
   modas.forEach(moda => {
+
+    if (!Array.isArray(moda.lines)) return;
 
     moda.lines.forEach(line => {
 
@@ -35,8 +38,10 @@ export function buildGraph(modas, integrations) {
 
   });
 
-  integrations.walkConnections.forEach(link => {
-    addEdge(link.from, link.to, "WALK", "Jalan Kaki");
-    addEdge(link.to, link.from, "WALK", "Jalan Kaki");
-  });
+  if (integrations?.walkConnections) {
+    integrations.walkConnections.forEach(link => {
+      addEdge(link.from, link.to, "WALK", "Jalan Kaki");
+      addEdge(link.to, link.from, "WALK", "Jalan Kaki");
+    });
+  }
 }
