@@ -50,6 +50,9 @@ async function loadData() {
 
     // 🔥 build graph (akan isi graph & stationCoords otomatis)
     buildGraph(modas, integrations);
+    console.log("GRAPH OBJECT:", graph);
+    console.log("GRAPH KEYS:", Object.keys(graph));
+
 
     populateDropdown();
     initMap();
