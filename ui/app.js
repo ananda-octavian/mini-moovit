@@ -2,6 +2,7 @@ import { buildGraph } from "../core/graph.js";
 import { dijkstra } from "../core/dijkstra.js";
 import { renderResult } from "./render.js";
 import { findNearestStation } from "../core/nearest.js";
+import { calculateFare } from "../core/fare.js";
 
 const fromSelect = document.getElementById("from");
 const toSelect = document.getElementById("to");
@@ -11,21 +12,24 @@ const gpsBtn = document.getElementById("gpsBtn");
 
 let graph = null;
 let stations = {};
+let stationCoords = {};
 let map = null;
 let routeLine = null;
 
 // =======================
-// BASE PATH FIX (GitHub Pages Safe)
+// BASE PATH (GitHub Pages Safe)
 // =======================
 const BASE_PATH = window.location.hostname.includes("github.io")
   ? "/mini-moovit/"
   : "/";
 
 // =======================
-// LOAD SEMUA DATA JSON
+// LOAD SEMUA JSON DATA
 // =======================
 async function loadData() {
+
   try {
+
     const files = [
       "data/transjakarta.json",
       "data/krl.json",
@@ -40,30 +44,34 @@ async function loadData() {
     );
 
     responses.forEach(res => {
-      if (!res.ok) {
-        throw new Error("Gagal fetch: " + res.url);
-      }
+      if (!res.ok) throw new Error("Gagal fetch: " + res.url);
     });
 
     const datasets = await Promise.all(
       responses.map(r => r.json())
     );
 
+    // build graph
     graph = buildGraph(datasets);
 
-    // kumpulkan semua stasiun unik
+    // kumpulkan semua stasiun unik + koordinat
     datasets.forEach(data => {
+
       if (!data.stations) return;
 
       data.stations.forEach(s => {
         stations[s.name] = s;
+
+        if (s.lat && s.lng) {
+          stationCoords[s.name] = [s.lat, s.lng];
+        }
       });
     });
 
     populateDropdown();
     initMap();
 
-    console.log("Data berhasil dimuat");
+    console.log("Semua data berhasil dimuat");
 
   } catch (err) {
     console.error("ERROR LOAD DATA:", err);
@@ -88,7 +96,7 @@ function populateDropdown() {
 }
 
 // =======================
-// MAP
+// INIT MAP
 // =======================
 function initMap() {
 
@@ -124,7 +132,17 @@ searchBtn.addEventListener("click", () => {
     return;
   }
 
+  // hitung tarif sesuai aturan kompleks
+  const totalFare = calculateFare(result, stationCoords);
+
   renderResult(result, resultDiv);
+
+  resultDiv.innerHTML += `
+    <hr>
+    <h3>Total Tarif:</h3>
+    <p><b>Rp ${totalFare.toLocaleString()}</b></p>
+  `;
+
   drawRoute(result.path);
 });
 
@@ -190,6 +208,6 @@ gpsBtn.addEventListener("click", () => {
 });
 
 // =======================
-// START
+// START APP
 // =======================
 document.addEventListener("DOMContentLoaded", loadData);

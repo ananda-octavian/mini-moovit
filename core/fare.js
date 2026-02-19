@@ -1,5 +1,3 @@
-import { calculateDistance } from "./distance.js";
-
 export function calculateFare(result, stationCoords) {
 
   let totalFare = 0;
@@ -12,8 +10,7 @@ export function calculateFare(result, stationCoords) {
 
   const now = new Date();
   const hour = now.getHours();
-  const day = now.getDay(); // 0 = Minggu, 6 = Sabtu
-
+  const day = now.getDay(); // 0 Minggu, 6 Sabtu
   const isWeekend = (day === 0 || day === 6);
 
   const path = result.path;
@@ -27,66 +24,57 @@ export function calculateFare(result, stationCoords) {
     const coord1 = stationCoords[path[i - 1]];
     const coord2 = stationCoords[path[i]];
 
-    // ====================
-    // KRL
-    // ====================
+    // ===== KRL =====
     if (data.mode === "KRL") {
-      krlDistance += calculateDistance(coord1, coord2);
+      krlDistance += distance(coord1, coord2);
     }
 
-    // ====================
-    // MRT
-    // ====================
+    // ===== MRT =====
     if (data.mode === "MRT") {
       mrtStops++;
     }
 
-    // ====================
-    // LRT Jabodebek
-    // ====================
+    // ===== LRT JABODEBEK =====
     if (data.mode === "LRT Jabodebek") {
-      lrtJabodebekDistance += calculateDistance(coord1, coord2);
+      lrtJabodebekDistance += distance(coord1, coord2);
     }
 
-    // ====================
-    // LRT Jakarta
-    // ====================
+    // ===== LRT JAKARTA =====
     if (data.mode === "LRT Jakarta") {
       lrtJakartaUsed = true;
     }
 
-    // ====================
-    // TransJakarta
-    // ====================
+    // ===== TRANSJAKARTA =====
     if (data.mode === "TransJakarta") {
       tjUsed = true;
     }
   }
 
-  // ====================
-  // HITUNG KRL
-  // ====================
+  // =========================
+  // 🚆 KRL
+  // =========================
   if (krlDistance > 0) {
+
     if (krlDistance <= 25) {
       totalFare += 3000;
     } else {
       totalFare += 3000;
-      let remaining = krlDistance - 25;
-      let extra = Math.ceil(remaining / 10);
+      const remaining = krlDistance - 25;
+      const extra = Math.ceil(remaining / 10);
       totalFare += extra * 1000;
     }
   }
 
-  // ====================
-  // HITUNG MRT
-  // ====================
+  // =========================
+  // 🚇 MRT
+  // =========================
   if (mrtStops > 0) {
     totalFare += 3000 + ((mrtStops - 1) * 1000);
   }
 
-  // ====================
-  // HITUNG LRT JABODEBEK
-  // ====================
+  // =========================
+  // 🚈 LRT JABODEBEK
+  // =========================
   if (lrtJabodebekDistance > 0) {
 
     let fare = 5000 + Math.ceil(lrtJabodebekDistance * 700);
@@ -113,16 +101,16 @@ export function calculateFare(result, stationCoords) {
     totalFare += fare;
   }
 
-  // ====================
-  // HITUNG LRT JAKARTA
-  // ====================
+  // =========================
+  // 🚈 LRT JAKARTA
+  // =========================
   if (lrtJakartaUsed) {
     totalFare += 5000;
   }
 
-  // ====================
-  // HITUNG TRANSJAKARTA
-  // ====================
+  // =========================
+  // 🚌 TRANSJAKARTA
+  // =========================
   if (tjUsed) {
     if (hour >= 5 && hour < 7) {
       totalFare += 2000;
@@ -131,7 +119,32 @@ export function calculateFare(result, stationCoords) {
     }
   }
 
-  return {
-    totalFare
-  };
+  return totalFare;
+}
+
+
+// =========================
+// Hitung jarak km (Haversine)
+// =========================
+function distance(coord1, coord2) {
+
+  if (!coord1 || !coord2) return 0;
+
+  const [lat1, lon1] = coord1;
+  const [lat2, lon2] = coord2;
+
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+
+  const a =
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI/180) *
+    Math.cos(lat2 * Math.PI/180) *
+    Math.sin(dLon/2) *
+    Math.sin(dLon/2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+  return R * c;
 }
