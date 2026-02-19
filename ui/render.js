@@ -1,19 +1,21 @@
-export function renderRoute(result, fare) {
+export function renderResult(result, container) {
 
-  const container = document.getElementById("result");
   container.innerHTML = "";
 
-  let prev = result.prev;
-  let path = result.path;
+  const prev = result.prev;
+  const path = result.path;
 
   let currentMode = null;
   let currentLine = null;
+
+  container.innerHTML += "<h3>Rute Perjalanan:</h3>";
 
   for (let i = 1; i < path.length; i++) {
 
     const data = prev[path[i]];
     if (!data) continue;
 
+    // Jika ganti moda atau line
     if (data.mode !== currentMode || data.line !== currentLine) {
 
       container.innerHTML += `
@@ -29,6 +31,6 @@ export function renderRoute(result, fare) {
   }
 
   container.innerHTML += `
-    <br><strong>Total Harga: Rp ${fare.totalFare.toLocaleString()}</strong>
+    <br><strong>Total Waktu: ${result.distance} menit</strong>
   `;
 }
