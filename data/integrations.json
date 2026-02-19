@@ -1,6 +1,3 @@
 {
-  "walkConnections": [
-    { "from": "Bundaran HI", "to": "Manggarai", "walkTime": 5 },
-    { "from": "Blok M", "to": "Blok M", "walkTime": 2 }
-  ]
+  "walkConnections": []
 }

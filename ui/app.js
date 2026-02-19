@@ -1,4 +1,4 @@
-import { buildGraph } from "../core/graph.js";
+import { buildGraph, graph, stationCoords } from "../core/graph.js";
 import { dijkstra } from "../core/dijkstra.js";
 import { renderResult } from "./render.js";
 import { findNearestStation } from "../core/nearest.js";
@@ -10,72 +10,55 @@ const resultDiv = document.getElementById("result");
 const searchBtn = document.getElementById("searchBtn");
 const gpsBtn = document.getElementById("gpsBtn");
 
-let graph = null;
-let stations = {};
-let stationCoords = {};
 let map = null;
 let routeLine = null;
 
 // =======================
-// BASE PATH (GitHub Pages Safe)
+// BASE PATH
 // =======================
 const BASE_PATH = window.location.hostname.includes("github.io")
   ? "/mini-moovit/"
   : "/";
 
 // =======================
-// LOAD SEMUA JSON DATA
+// LOAD DATA
 // =======================
 async function loadData() {
 
   try {
 
-    const files = [
+    const modaFiles = [
       "data/transjakarta.json",
       "data/krl.json",
       "data/mrt.json",
       "data/lrt_jabodebek.json",
-      "data/lrt_jakarta.json",
-      "data/integrations.json"
+      "data/lrt_jakarta.json"
     ];
 
-    const responses = await Promise.all(
-      files.map(f => fetch(BASE_PATH + f))
+    const integrationsFile = "data/integrations.json";
+
+    const modaResponses = await Promise.all(
+      modaFiles.map(f => fetch(BASE_PATH + f))
     );
 
-    responses.forEach(res => {
-      if (!res.ok) throw new Error("Gagal fetch: " + res.url);
-    });
-
-    const datasets = await Promise.all(
-      responses.map(r => r.json())
+    const modas = await Promise.all(
+      modaResponses.map(r => r.json())
     );
 
-    // build graph
-    graph = buildGraph(datasets);
+    const integrationsResponse = await fetch(BASE_PATH + integrationsFile);
+    const integrations = await integrationsResponse.json();
 
-    // kumpulkan semua stasiun unik + koordinat
-    datasets.forEach(data => {
-
-      if (!data.stations) return;
-
-      data.stations.forEach(s => {
-        stations[s.name] = s;
-
-        if (s.lat && s.lng) {
-          stationCoords[s.name] = [s.lat, s.lng];
-        }
-      });
-    });
+    // 🔥 build graph (akan isi graph & stationCoords otomatis)
+    buildGraph(modas, integrations);
 
     populateDropdown();
     initMap();
 
-    console.log("Semua data berhasil dimuat");
+    console.log("Jumlah node:", Object.keys(graph).length);
 
   } catch (err) {
     console.error("ERROR LOAD DATA:", err);
-    resultDiv.innerHTML = "<b>Gagal memuat data. Cek console.</b>";
+    resultDiv.innerHTML = "<b>Gagal memuat data</b>";
   }
 }
 
@@ -87,7 +70,7 @@ function populateDropdown() {
   fromSelect.innerHTML = "<option value=''>Pilih Asal</option>";
   toSelect.innerHTML = "<option value=''>Pilih Tujuan</option>";
 
-  Object.keys(stations)
+  Object.keys(graph)
     .sort()
     .forEach(name => {
       fromSelect.add(new Option(name, name));
@@ -96,7 +79,7 @@ function populateDropdown() {
 }
 
 // =======================
-// INIT MAP
+// MAP
 // =======================
 function initMap() {
 
@@ -112,7 +95,7 @@ function initMap() {
 // =======================
 searchBtn.addEventListener("click", () => {
 
-  if (!graph) {
+  if (Object.keys(graph).length === 0) {
     alert("Data belum siap");
     return;
   }
@@ -125,17 +108,16 @@ searchBtn.addEventListener("click", () => {
     return;
   }
 
-  const result = dijkstra(graph, from, to);
+  const result = dijkstra(from, to);
 
-  if (!result || !result.path || result.path.length === 0) {
+  if (!result || !result.path || result.path.length <= 1) {
     resultDiv.innerHTML = "Rute tidak ditemukan";
     return;
   }
 
-  // hitung tarif sesuai aturan kompleks
-  const totalFare = calculateFare(result, stationCoords);
-
   renderResult(result, resultDiv);
+
+  const totalFare = calculateFare(result, stationCoords);
 
   resultDiv.innerHTML += `
     <hr>
@@ -158,11 +140,7 @@ function drawRoute(path) {
   }
 
   const latlngs = path
-    .map(name => {
-      const s = stations[name];
-      if (!s || !s.lat || !s.lng) return null;
-      return [s.lat, s.lng];
-    })
+    .map(name => stationCoords[name])
     .filter(Boolean);
 
   if (latlngs.length === 0) return;
@@ -195,7 +173,7 @@ gpsBtn.addEventListener("click", () => {
       .bindPopup("Lokasi Anda")
       .openPopup();
 
-    const nearest = findNearestStation(lat, lng, stations);
+    const nearest = findNearestStation(lat, lng, stationCoords);
 
     if (nearest) {
       fromSelect.value = nearest.name;
@@ -208,6 +186,6 @@ gpsBtn.addEventListener("click", () => {
 });
 
 // =======================
-// START APP
+// START
 // =======================
 document.addEventListener("DOMContentLoaded", loadData);

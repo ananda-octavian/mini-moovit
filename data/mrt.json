@@ -1,11 +1,16 @@
 {
   "mode": "MRT",
   "travelTimePerStop": 2,
-  "lines": {
-    "MRT Kuning": [
-      { "name": "Lebak Bulus", "coords": [-6.2890,106.7744] },
-      { "name": "Blok M", "coords": [-6.2447,106.8003] },
-      { "name": "Bundaran HI", "coords": [-6.1931,106.8218] }
-    ]
-  }
+  "lines": [
+    {
+      "id": "Kuning",
+      "name": "MRT Kuning",
+      "color": "Kuning",
+      "stations": [
+        { "name": "Lebak Bulus", "coords": [-6.2890,106.7744] },
+        { "name": "Blok M", "coords": [-6.2447,106.8003] },
+        { "name": "Bundaran HI", "coords": [-6.1931,106.8218] }
+      ]
+    }
+  ]
 }
