@@ -9,52 +9,89 @@ const resultDiv = document.getElementById("result");
 const searchBtn = document.getElementById("searchBtn");
 const gpsBtn = document.getElementById("gpsBtn");
 
-let graph;
+let graph = null;
 let stations = {};
-let map;
-let routeLine;
+let map = null;
+let routeLine = null;
+
+// =======================
+// BASE PATH FIX (GitHub Pages Safe)
+// =======================
+const BASE_PATH = window.location.hostname.includes("github.io")
+  ? "/mini-moovit/"
+  : "/";
 
 // =======================
 // LOAD SEMUA DATA JSON
 // =======================
 async function loadData() {
+  try {
+    const files = [
+      "data/transjakarta.json",
+      "data/krl.json",
+      "data/mrt.json",
+      "data/lrt_jabodebek.json",
+      "data/lrt_jakarta.json",
+      "data/integrations.json"
+    ];
 
-  const files = [
-    "data/transjakarta.json",
-    "data/krl.json",
-    "data/mrt.json",
-    "data/lrt_jabodebek.json",
-    "data/lrt_jakarta.json",
-    "data/integrations.json"
-  ];
+    const responses = await Promise.all(
+      files.map(f => fetch(BASE_PATH + f))
+    );
 
-  const responses = await Promise.all(files.map(f => fetch(f)));
-  const datasets = await Promise.all(responses.map(r => r.json()));
-
-  graph = buildGraph(datasets);
-
-  // kumpulkan semua stasiun unik
-  datasets.forEach(data => {
-    data.stations.forEach(s => {
-      stations[s.name] = s;
+    responses.forEach(res => {
+      if (!res.ok) {
+        throw new Error("Gagal fetch: " + res.url);
+      }
     });
-  });
 
-  populateDropdown();
-  initMap();
+    const datasets = await Promise.all(
+      responses.map(r => r.json())
+    );
+
+    graph = buildGraph(datasets);
+
+    // kumpulkan semua stasiun unik
+    datasets.forEach(data => {
+      if (!data.stations) return;
+
+      data.stations.forEach(s => {
+        stations[s.name] = s;
+      });
+    });
+
+    populateDropdown();
+    initMap();
+
+    console.log("Data berhasil dimuat");
+
+  } catch (err) {
+    console.error("ERROR LOAD DATA:", err);
+    resultDiv.innerHTML = "<b>Gagal memuat data. Cek console.</b>";
+  }
 }
 
+// =======================
+// DROPDOWN
+// =======================
 function populateDropdown() {
-  Object.keys(stations).forEach(name => {
-    fromSelect.add(new Option(name, name));
-    toSelect.add(new Option(name, name));
-  });
+
+  fromSelect.innerHTML = "<option value=''>Pilih Asal</option>";
+  toSelect.innerHTML = "<option value=''>Pilih Tujuan</option>";
+
+  Object.keys(stations)
+    .sort()
+    .forEach(name => {
+      fromSelect.add(new Option(name, name));
+      toSelect.add(new Option(name, name));
+    });
 }
 
 // =======================
 // MAP
 // =======================
 function initMap() {
+
   map = L.map("map").setView([-6.2, 106.8], 11);
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -67,6 +104,11 @@ function initMap() {
 // =======================
 searchBtn.addEventListener("click", () => {
 
+  if (!graph) {
+    alert("Data belum siap");
+    return;
+  }
+
   const from = fromSelect.value;
   const to = toSelect.value;
 
@@ -77,13 +119,12 @@ searchBtn.addEventListener("click", () => {
 
   const result = dijkstra(graph, from, to);
 
-  if (!result.path) {
+  if (!result || !result.path || result.path.length === 0) {
     resultDiv.innerHTML = "Rute tidak ditemukan";
     return;
   }
 
   renderResult(result, resultDiv);
-
   drawRoute(result.path);
 });
 
@@ -92,12 +133,21 @@ searchBtn.addEventListener("click", () => {
 // =======================
 function drawRoute(path) {
 
-  if (routeLine) map.removeLayer(routeLine);
+  if (!map) return;
 
-  const latlngs = path.map(name => {
-    const s = stations[name];
-    return [s.lat, s.lng];
-  });
+  if (routeLine) {
+    map.removeLayer(routeLine);
+  }
+
+  const latlngs = path
+    .map(name => {
+      const s = stations[name];
+      if (!s || !s.lat || !s.lng) return null;
+      return [s.lat, s.lng];
+    })
+    .filter(Boolean);
+
+  if (latlngs.length === 0) return;
 
   routeLine = L.polyline(latlngs).addTo(map);
   map.fitBounds(routeLine.getBounds());
@@ -109,11 +159,13 @@ function drawRoute(path) {
 gpsBtn.addEventListener("click", () => {
 
   if (!navigator.geolocation) {
-    alert("GPS tidak didukung");
+    alert("GPS tidak didukung browser");
     return;
   }
 
   navigator.geolocation.getCurrentPosition(pos => {
+
+    if (!map) return;
 
     const lat = pos.coords.latitude;
     const lng = pos.coords.longitude;
@@ -127,11 +179,17 @@ gpsBtn.addEventListener("click", () => {
 
     const nearest = findNearestStation(lat, lng, stations);
 
-    fromSelect.value = nearest.name;
+    if (nearest) {
+      fromSelect.value = nearest.name;
+    }
 
-  }, () => {
-    alert("Gagal ambil lokasi");
+  }, err => {
+    console.error(err);
+    alert("Gagal mengambil lokasi");
   });
 });
 
-loadData();
+// =======================
+// START
+// =======================
+document.addEventListener("DOMContentLoaded", loadData);

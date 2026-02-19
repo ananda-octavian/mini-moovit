@@ -2,24 +2,44 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Mini Moovit</title>
 
-  <!-- Leaflet -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#2196f3" />
 
-  <link rel="stylesheet" href="style.css"/>
+  <!-- Leaflet CSS -->
+  <link 
+    rel="stylesheet" 
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity=""
+    crossorigin=""
+  />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="./style.css" />
 </head>
+
 <body>
+
+  <noscript>
+    <h3>JavaScript harus diaktifkan untuk menjalankan aplikasi ini.</h3>
+  </noscript>
 
   <div class="app">
 
     <h1>Mini Moovit 🚆</h1>
 
     <div class="controls">
-      <select id="from"></select>
-      <select id="to"></select>
+      <select id="from">
+        <option value="">Memuat data...</option>
+      </select>
+
+      <select id="to">
+        <option value="">Memuat data...</option>
+      </select>
 
       <button id="searchBtn">Cari Rute</button>
       <button id="gpsBtn">Gunakan GPS</button>
@@ -27,12 +47,27 @@
 
     <div id="result"></div>
 
-    <div id="map"></div>
+    <div id="map" style="height: 400px;"></div>
 
   </div>
 
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script type="module" src="ui/app.js"></script>
+  <!-- Leaflet JS -->
+  <script 
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    crossorigin=""
+  ></script>
+
+  <!-- App -->
+  <script type="module" src="./ui/app.js"></script>
+
+  <!-- Service Worker -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./service-worker.js")
+        .then(() => console.log("Service Worker registered"))
+        .catch(err => console.error("SW error:", err));
+    }
+  </script>
 
 </body>
 </html>

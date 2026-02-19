@@ -1,4 +1,4 @@
-const CACHE = "mini-moovit-v1";
+const CACHE_NAME = "mini-moovit-v2";
 
 self.addEventListener("install", e => {
   e.waitUntil(
