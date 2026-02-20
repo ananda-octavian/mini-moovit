@@ -7,14 +7,17 @@ export function buildGraph(modas, integrations) {
 
     if (!moda.lines) return;
 
-    // 🔥 Kalau lines berbentuk ARRAY (TransJakarta)
+    // ARRAY format
     if (Array.isArray(moda.lines)) {
 
       moda.lines.forEach(line => {
 
         const stops = line.stops || line.stations;
+        if (!Array.isArray(stops)) return;
 
         stops.forEach((stop, i) => {
+
+          if (!stop?.name || !stop?.coords) return;
 
           stationCoords[stop.name] = stop.coords;
 
@@ -22,21 +25,25 @@ export function buildGraph(modas, integrations) {
 
           if (i > 0) {
             const prev = stops[i - 1];
+
+            if (!prev?.name) return;
 
             addEdge(stop.name, prev.name, moda.mode, line.name);
             addEdge(prev.name, stop.name, moda.mode, line.name);
           }
         });
-
       });
 
-    } 
-    // 🔥 Kalau lines berbentuk OBJECT (MRT/LRT)
-    else {
+    } else {
 
+      // OBJECT format
       Object.entries(moda.lines).forEach(([lineName, stops]) => {
 
+        if (!Array.isArray(stops)) return;
+
         stops.forEach((stop, i) => {
+
+          if (!stop?.name || !stop?.coords) return;
 
           stationCoords[stop.name] = stop.coords;
 
@@ -45,20 +52,22 @@ export function buildGraph(modas, integrations) {
           if (i > 0) {
             const prev = stops[i - 1];
 
+            if (!prev?.name) return;
+
             addEdge(stop.name, prev.name, moda.mode, lineName);
             addEdge(prev.name, stop.name, moda.mode, lineName);
           }
         });
-
       });
-
     }
 
   });
 
-  // 🔥 Integrasi
   if (integrations?.walkConnections) {
+
     integrations.walkConnections.forEach(link => {
+
+      if (!link?.from || !link?.to) return;
 
       if (!graph[link.from]) graph[link.from] = [];
       if (!graph[link.to]) graph[link.to] = [];
@@ -68,5 +77,5 @@ export function buildGraph(modas, integrations) {
     });
   }
 
-  console.log("Total stasiun dalam graph:", Object.keys(graph).length);
+  console.log("Graph built:", Object.keys(graph).length, "stations");
 }
