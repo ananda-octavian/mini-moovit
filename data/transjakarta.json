@@ -5,11 +5,19 @@
     {
       "id": "1",
       "name": "Koridor 1",
-      "color": "Biru",
       "stops": [
-        { "name": "Blok M", "coords": [-6.2447,106.8003] },
-        { "name": "Bundaran HI", "coords": [-6.1931,106.8218] },
-        { "name": "Kota", "coords": [-6.1376,106.8145] }
+        { "name": "Blok M", "coords": [-6.2445, 106.8002] },
+        { "name": "Bundaran Senayan", "coords": [-6.226, 106.800] },
+        { "name": "Karet Sudirman", "coords": [-6.205, 106.821] },
+        { "name": "Dukuh Atas", "coords": [-6.200, 106.822] },
+        { "name": "Bundaran HI", "coords": [-6.1932, 106.8219] }
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Koridor Lebak Bulus",
+      "stops": [
+        { "name": "Lebak Bulus", "coords": [-6.2895, 106.775] }
       ]
     }
   ]

@@ -1,3 +1,10 @@
 {
-  "walkConnections": []
+  "walkConnections": [
+    { "from": "Lebak Bulus Grab", "to": "Lebak Bulus" },
+    { "from": "Blok M BCA", "to": "Blok M" },
+    { "from": "Bundaran HI", "to": "Bundaran HI" },
+    { "from": "Dukuh Atas BNI", "to": "Dukuh Atas" },
+    { "from": "Bendungan Hilir", "to": "Karet Sudirman" },
+    { "from": "Senayan", "to": "Bundaran Senayan" }
+  ]
 }

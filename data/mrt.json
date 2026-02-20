@@ -1,16 +1,21 @@
 {
   "mode": "MRT",
-  "travelTimePerStop": 2,
-  "lines": [
-    {
-      "id": "Kuning",
-      "name": "MRT Kuning",
-      "color": "Kuning",
-      "stations": [
-        { "name": "Lebak Bulus", "coords": [-6.2890,106.7744] },
-        { "name": "Blok M", "coords": [-6.2447,106.8003] },
-        { "name": "Bundaran HI", "coords": [-6.1931,106.8218] }
-      ]
-    }
-  ]
+  "travelTimePerStop": 3,
+  "lines": {
+    "MRT Utara-Selatan": [
+      { "name": "Lebak Bulus Grab", "coords": [-6.289, 106.774] },
+      { "name": "Fatmawati", "coords": [-6.292, 106.792] },
+      { "name": "Cipete Raya", "coords": [-6.278, 106.797] },
+      { "name": "Haji Nawi", "coords": [-6.266, 106.797] },
+      { "name": "Blok A", "coords": [-6.255, 106.798] },
+      { "name": "Blok M BCA", "coords": [-6.2447, 106.8003] },
+      { "name": "ASEAN", "coords": [-6.238, 106.802] },
+      { "name": "Senayan", "coords": [-6.225, 106.802] },
+      { "name": "Istora Mandiri", "coords": [-6.218, 106.803] },
+      { "name": "Bendungan Hilir", "coords": [-6.214, 106.817] },
+      { "name": "Setiabudi Astra", "coords": [-6.208, 106.821] },
+      { "name": "Dukuh Atas BNI", "coords": [-6.200, 106.823] },
+      { "name": "Bundaran HI", "coords": [-6.1931, 106.8218] }
+    ]
+  }
 }
