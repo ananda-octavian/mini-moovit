@@ -1,5 +1,15 @@
+// ✅ WAJIB ADA
+export let graph = {};
+export let stationCoords = {};
+
+function addEdge(a, b, mode, lineName) {
+  if (!graph[a]) graph[a] = [];
+  graph[a].push({ node: b, mode, line: lineName });
+}
+
 export function buildGraph(modas, integrations) {
 
+  // 🔥 reset TANPA reassign
   Object.keys(graph).forEach(key => delete graph[key]);
   Object.keys(stationCoords).forEach(key => delete stationCoords[key]);
 
@@ -7,7 +17,7 @@ export function buildGraph(modas, integrations) {
 
     if (!moda.lines) return;
 
-    // ARRAY format
+    // ARRAY format (TransJakarta, KRL)
     if (Array.isArray(moda.lines)) {
 
       moda.lines.forEach(line => {
@@ -25,7 +35,6 @@ export function buildGraph(modas, integrations) {
 
           if (i > 0) {
             const prev = stops[i - 1];
-
             if (!prev?.name) return;
 
             addEdge(stop.name, prev.name, moda.mode, line.name);
@@ -36,7 +45,7 @@ export function buildGraph(modas, integrations) {
 
     } else {
 
-      // OBJECT format
+      // OBJECT format (MRT, LRT)
       Object.entries(moda.lines).forEach(([lineName, stops]) => {
 
         if (!Array.isArray(stops)) return;
@@ -51,7 +60,6 @@ export function buildGraph(modas, integrations) {
 
           if (i > 0) {
             const prev = stops[i - 1];
-
             if (!prev?.name) return;
 
             addEdge(stop.name, prev.name, moda.mode, lineName);
@@ -63,6 +71,7 @@ export function buildGraph(modas, integrations) {
 
   });
 
+  // Integrasi jalan kaki
   if (integrations?.walkConnections) {
 
     integrations.walkConnections.forEach(link => {
