@@ -8,7 +8,6 @@ const fromSelect = document.getElementById("from");
 const toSelect = document.getElementById("to");
 const resultDiv = document.getElementById("result");
 const searchBtn = document.getElementById("searchBtn");
-const gpsBtn = document.getElementById("gpsBtn");
 
 let map = null;
 let routeLine = null;
@@ -70,7 +69,11 @@ async function loadData() {
 // =======================
 function populateDropdown() {
 
-  fromSelect.innerHTML = "<option value=''>Pilih Asal</option>";
+  fromSelect.innerHTML = `
+    <option value="">Pilih Asal</option>
+    <option value="__GPS__">📍 Gunakan GPS</option>
+  `;
+
   toSelect.innerHTML = "<option value=''>Pilih Tujuan</option>";
 
   Object.keys(graph)
@@ -155,37 +158,38 @@ function drawRoute(path) {
 // =======================
 // GPS
 // =======================
-gpsBtn.addEventListener("click", () => {
+fromSelect.addEventListener("change", () => {
+
+  if (fromSelect.value !== "__GPS__") return;
 
   if (!navigator.geolocation) {
     alert("GPS tidak didukung browser");
+    fromSelect.value = "";
     return;
   }
 
   navigator.geolocation.getCurrentPosition(pos => {
 
-    if (!map) return;
-
     const lat = pos.coords.latitude;
     const lng = pos.coords.longitude;
 
-    map.setView([lat, lng], 14);
-
-    L.marker([lat, lng])
-      .addTo(map)
-      .bindPopup("Lokasi Anda")
-      .openPopup();
-
     const nearest = findNearestStation(lat, lng, stationCoords);
 
-    if (nearest) {
-      fromSelect.value = nearest.name;
+    if (!nearest) {
+      alert("Tidak menemukan stasiun terdekat");
+      fromSelect.value = "";
+      return;
     }
+
+    // Set dropdown ke nama stasiun terdekat
+    fromSelect.value = nearest.name;
 
   }, err => {
     console.error(err);
     alert("Gagal mengambil lokasi");
+    fromSelect.value = "";
   });
+
 });
 
 // =======================
