@@ -1,6 +1,5 @@
 export function buildGraph(modas, integrations) {
 
-  // 🔥 reset tanpa reassign
   Object.keys(graph).forEach(key => delete graph[key]);
   Object.keys(stationCoords).forEach(key => delete stationCoords[key]);
 
@@ -8,30 +7,56 @@ export function buildGraph(modas, integrations) {
 
     if (!moda.lines) return;
 
-    // 🔥 Karena lines adalah OBJECT
-    Object.entries(moda.lines).forEach(([lineName, stops]) => {
+    // 🔥 Kalau lines berbentuk ARRAY (TransJakarta)
+    if (Array.isArray(moda.lines)) {
 
-      stops.forEach((stop, i) => {
+      moda.lines.forEach(line => {
 
-        stationCoords[stop.name] = stop.coords;
+        const stops = line.stops || line.stations;
 
-        if (!graph[stop.name]) graph[stop.name] = [];
+        stops.forEach((stop, i) => {
 
-        if (i > 0) {
+          stationCoords[stop.name] = stop.coords;
 
-          const prev = stops[i - 1];
+          if (!graph[stop.name]) graph[stop.name] = [];
 
-          addEdge(stop.name, prev.name, moda.mode, lineName);
-          addEdge(prev.name, stop.name, moda.mode, lineName);
-        }
+          if (i > 0) {
+            const prev = stops[i - 1];
+
+            addEdge(stop.name, prev.name, moda.mode, line.name);
+            addEdge(prev.name, stop.name, moda.mode, line.name);
+          }
+        });
 
       });
 
-    });
+    } 
+    // 🔥 Kalau lines berbentuk OBJECT (MRT/LRT)
+    else {
+
+      Object.entries(moda.lines).forEach(([lineName, stops]) => {
+
+        stops.forEach((stop, i) => {
+
+          stationCoords[stop.name] = stop.coords;
+
+          if (!graph[stop.name]) graph[stop.name] = [];
+
+          if (i > 0) {
+            const prev = stops[i - 1];
+
+            addEdge(stop.name, prev.name, moda.mode, lineName);
+            addEdge(prev.name, stop.name, moda.mode, lineName);
+          }
+        });
+
+      });
+
+    }
 
   });
 
-  // 🔥 Integrasi antar moda
+  // 🔥 Integrasi
   if (integrations?.walkConnections) {
     integrations.walkConnections.forEach(link => {
 
